@@ -1,4 +1,4 @@
-# ReadSPSS
+# ReadSPSS - read SPSS .sav files
 
 [![Build Status](https://travis-ci.org/dmbates/ReadSPSS.jl.svg?branch=master)](https://travis-ci.org/dmbates/ReadSPSS.jl)
 
