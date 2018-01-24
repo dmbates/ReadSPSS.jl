@@ -1,9 +1,9 @@
 module ReadSPSS
 
 using Compat
-using Compat.Mmap, Compat.Missings, CategoricalArrays
+using Compat.Mmap, Missings, CategoricalArrays
 
-export SPSSDataFrame
+export SPSSDataFrame, read_sav
 
 include("types.jl")
 
