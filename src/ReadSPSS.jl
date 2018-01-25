@@ -5,6 +5,10 @@ using Compat.Mmap, Missings, CategoricalArrays
 
 export SPSSDataFrame, read_sav
 
-include("types.jl")
+include("headerrecord.jl")
+include("variablerecord.jl")
+include("valuelabels.jl")
+include("inforecord.jl")
+include("readers.jl")
 
 end # module
