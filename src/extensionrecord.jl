@@ -4,9 +4,10 @@
 expectedblksz(typ::Int32) = (typ in [4, 16]) ? 8 : ((typ in [3, 11]) ? 4 : 1)
 
 function readinfo(io::IO, infodict)
-    subtyp, blksz, nblk = read(io, Int32, 3)
+    subtyp = read(io, Int32)
+    blksz = read(io, Int32)
     blksz == expectedblksz(subtyp) || error("subtyp $subtyp gave blksz $blksz")
-    contents = read(io, blksz * nblk)
+    contents = read(io, blksz * read(io, Int32))
     if subtyp == 3
         v = reinterpret(Int32, contents)
         infodict[:version] = VersionNumber(v[1], v[2], v[3])
@@ -45,4 +46,14 @@ function readinfo(io::IO, infodict)
     else
         error("unknown info subtype: ", subtyp)
     end
+end
+
+function readextensionrecords(io::IO, vdict::VariableDictionary)
+    rectyp = Int32(7)
+    infodict = Dict{Symbol,Any}()
+    while rectyp == 7
+        readinfo(io, infodict)
+        rectyp = read(io, Int32)
+    end
+    return rectyp, infodict
 end
