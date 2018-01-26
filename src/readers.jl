@@ -13,6 +13,7 @@ function read_sav(io::IO)
     rectyp = read(io, Int32)
     @assert rectyp == 2 "variable dictionary records should immediately follow header"
     rectyp, vdict = readvariabledictionary(io, max(casesz, 5))
+    casesz = length(vdict.nms)
     if rectyp == 3   # read value labels, if any
         rectyp = readvaluelabels!(io, vdict, comp == 1, bias)
     end
@@ -26,6 +27,13 @@ function read_sav(io::IO)
         skip(io, 4)
     else
         println("rectype $rectyp encountered")
+    end
+    if comp == 1
+        ibuf = Vector{UInt8}(casesz)
+        fbuf = Vector{Union{Float64,Missing}}(casesz)
+        for k in 1:ncases
+            readbytecoderec!(io, ibuf, fbuf, bias)
+        end
     end
     SPSSDataFrame(vdict, Vector{Any}[], producer, cdate, ctime, flabel), infodict
 end
