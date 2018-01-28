@@ -1,5 +1,5 @@
 function readbytecoderec!(io::IO, ibuf::Vector{UInt8}, fbuf::Vector{Union{Float64,Missing}}, bias)
-    ind = 1   # index into rbuffer
+    ind = 1   # index into buf8bytes
     for i in 1:length(ibuf)
         ind == 1 && read!(io, buf8bytes)
         ibuf[i] = b = buf8bytes[ind]
