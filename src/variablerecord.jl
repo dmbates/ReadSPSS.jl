@@ -34,7 +34,7 @@ struct VariableDictionary
     typs::Vector{DataType}
     widths::Vector{Int32}
     labels::Vector{String}
-    valuelabels::Dict{Symbol,Dict}
+    valuelabels::Vector{Union{Dict{Float64,String},Dict{UInt8,String}}}
     msngvals::Vector{Vector{Float64}}
 
     readwritefmt::Matrix{Int32}
@@ -57,5 +57,6 @@ function readvariabledictionary(io::IO, casesz)
     end
     vdicts = [Dict{T,String}() for T in typs]
     rdwrt = reshape(rdwrt, (2, length(typs)))
-    rectyp, VariableDictionary(nms, typs, wdths, labels, Dict{Symbol,Dict}(), msngvals, rdwrt)
+    valuelabels = Vector{Union{Dict{Float64,String},Dict{UInt8,String}}}(Compat.uninitialized, casesz)
+    rectyp, VariableDictionary(nms, typs, wdths, labels, valuelabels, msngvals, rdwrt)
 end
