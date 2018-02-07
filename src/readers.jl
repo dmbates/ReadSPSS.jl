@@ -32,10 +32,11 @@ function read_sav(io::IO)
             typs = vdict.typs
             @inbounds for k in 1:ncases
                 readbytecoderec!(io, ibuf, fbuf, bias)
-                for (j,T) in enumerate(typs)
+                for j in 1:length(typs)
                     datj = data[j]
-                    fbj = fbuf[j]
                     ibj = ibuf[j]
+                    fbj = fbuf[j]
+                    T = typs[j]
                     if T == String
                         if !ismissing(fbj)
                             datj[k] = strip(String(reinterpret(UInt8, [fbj])))
