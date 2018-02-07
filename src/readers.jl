@@ -51,5 +51,16 @@ function read_sav(io::IO)
             end
         end
     end
+    if !isempty(vdict.valuelabels)
+        for (k,v) in vdict.valuelabels
+            ind = vdict.invnms[k]
+            data[ind] = droplevels!(recode(categorical(data[ind], true, ordered = true), v...))
+        end
+    end
+    for (i,v) in enumerate(data)
+        if !any(ismissing, v)
+            data[i] = disallowmissing(v)
+        end
+    end
     SPSSDataFrame(vdict, data, producer, cdate, ctime, flabel), infodict
 end
