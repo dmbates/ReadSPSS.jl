@@ -34,12 +34,13 @@ function readvaluelabels!(io::IO, vdict::VariableDictionary, bytecomp::Bool, bia
         if bytecomp && length(dictui) == length(dictf)  ## switch to compressed bytes
             for j in inds
                 typs[j] = UInt8
-                vlabs[j] = dictui
+                vlabs[nms[j]] = dictui
             end
-        else
+#=        else
             for j in inds
                 vlabs[j] = dictf
             end
+=#
         end
         rectyp = read(io, Int32)
     end
