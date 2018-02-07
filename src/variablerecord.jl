@@ -31,10 +31,11 @@ end
 
 struct VariableDictionary
     nms::Vector{Symbol}
+    invnms::Dict{Symbol,Int}  # dictionary mapping names to positions
     typs::Vector{DataType}
     widths::Vector{Int32}
     labels::Vector{String}
-    valuelabels::Vector{Union{Dict{Float64,String},Dict{UInt8,String}}}
+    valuelabels::Dict{Symbol, Union{Dict{Float64,String},Dict{UInt8,String}}}
     msngvals::Vector{Vector{Float64}}
 
     readwritefmt::Matrix{Int32}
@@ -42,6 +43,7 @@ end
 
 function readvariabledictionary(io::IO, casesz)
     nms = sizehint!(Symbol[], casesz)
+    invnms = sizehint!(Dict{Symbol,Int}(), casesz)
     typs = sizehint!(DataType[], casesz)
     wdths = sizehint!(Int32[], casesz)
     labels = sizehint!(String[], casesz)
@@ -55,8 +57,11 @@ function readvariabledictionary(io::IO, casesz)
     if all(isempty, msngvals)
         msngvals = Vector{Float64}[]
     end
+    for (i,v) in enumerate(nms)
+        invnms[v] = i
+    end
     vdicts = [Dict{T,String}() for T in typs]
     rdwrt = reshape(rdwrt, (2, length(typs)))
-    valuelabels = Vector{Union{Dict{Float64,String},Dict{UInt8,String}}}(Compat.uninitialized, casesz)
-    rectyp, VariableDictionary(nms, typs, wdths, labels, valuelabels, msngvals, rdwrt)
+    valuelabels = Dict{Symbol,Union{Dict{Float64,String},Dict{UInt8,String}}}()
+    rectyp, VariableDictionary(nms, invnms, typs, wdths, labels, valuelabels, msngvals, rdwrt)
 end
